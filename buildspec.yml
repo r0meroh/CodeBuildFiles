@@ -1,0 +1,27 @@
+# this file is a basic build spec that will save all files of the build as
+# artifacts to an S3 bucket. To configure correctly, build an S3 bucket and
+# configure the artifacts section of the codebuild project to allow reference
+# to the s3 bucket created.
+
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 10
+    commands:
+      - printenv
+      - echo "printing all environment variables used by codebuild up to this point"
+  pre_build:
+    commands:
+      - echo "pre_build phase commands here"
+  build:
+    commands:
+      - grep -Fq "v5" index.html
+  post_build:
+    commands:
+      - echo "post_build commands here"
+artifacts:
+  files:
+    - '**/*'
+  name: $AWS_REGION-$(date +%Y -%m -%d)
